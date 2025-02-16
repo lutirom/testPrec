@@ -5,7 +5,8 @@
 
 1. Встановити OpenServer 5.4.3 з версіями php 7.4+ MySql 8.0+
 2. В налаштування у вкладці <strong>Модулі</strong> встановити наступні: https://prnt.sc/qef_VzLwmO3y
-3. Скачати репозиторій у папку C:\OSPanel\domains додати домен Ім'я: <i>precedent.local</i> Папка домену: <i>basic/web</i>
+3. Скачати репозиторій у папку C:\OSPanel\domains
+4. У вкладці <strong>Домени</strong> додати домен Ім'я: <i>precedent.local</i> Папка домену: <i>basic/web</i>
 
 
 DIRECTORY STRUCTURE

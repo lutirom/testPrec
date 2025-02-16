@@ -18,7 +18,6 @@ class DocumentsController extends Controller
     {
         $query = Document::find();
         $pages = new Pagination(['totalCount' => $query->count(), 'defaultPageSize' => 25]);
-        echo $request->get('sort');
         if ($request->get('sort') === 'judgment') {
             $documents = $query->offset($pages->offset)
             ->limit($pages->limit)

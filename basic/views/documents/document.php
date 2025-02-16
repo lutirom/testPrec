@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <h1><?= Html::encode($this->title) ?></h1>
         <a href="<?= Url::toRoute(['/documents'])?>" class="btn btn-primary m-0">Назад</a>
     </div>
-    <p class=" border-start border-2 mt-4 p-2 pl-4 border-success"><?= DocType::getType($doc->decision_id) ?></p>
+    <p class=" border-start border-2 mt-4 p-2 pl-4 border-success fw-bold"><?= DocType::getType($doc->decision_id) ?></p>
     <h3 class="text-center"><?=$doc->doc_header?></h3>
     <div class="w-100 d-flex justify-content-center">
         <div class='border-bottom border-black w-50 my-4'></div>

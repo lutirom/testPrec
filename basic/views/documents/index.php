@@ -18,27 +18,31 @@ $paginationBlock = LinkPager::widget([
 ?>
 <div class="helloworld h-100">
     
-    <div class="head row py-2 justify-content-between align-items-center">
-        <h1 class="col"><?= Html::encode($this->title) ?></h1>
-        <div class="col-12 col-md-6 ">
-            <div class="position-relative">
-                <input type="text" class="form-control search-bar" id="search" placeholder="Пошук за номером справи" data-url="<?= Url::toRoute(['getDocument'])?>">
-                <div id="search-list" class="search-list d-none position-absolute top-100 w-100 border bg-white rounded-1">
-                    <p class="mb-0 p-2">Не знайдено</p>
+    <div class="head ">
+        <div class="row py-2 justify-content-between align-items-center"> 
+            <h1 class="col"><?= Html::encode($this->title) ?></h1>
+            <div class="col-12 col-md-6 ">
+                <div class="position-relative">
+                    <input type="text" class="form-control search-bar" id="search" placeholder="Пошук за номером справи" data-url="<?= Url::toRoute(['getDocument'])?>">
+                    <div id="search-list" class="search-list d-none position-absolute top-100 w-100 border bg-white rounded-1">
+                        <p class="mb-0 p-2">Не знайдено</p>
+                    </div>
                 </div>
             </div>
-            
         </div>
+        <p class="search-error ps-2 m-0 text-danger d-none text-end">Помилка завантаження даних, спробуйте пізніше</p>
     </div>
-    <div class="filters d-flex gap-2">
-        <p>Cортувати за:</p>
-        <?php if (Yii::$app->getRequest()->getQueryParam('sort') === 'judgment'):?>
-            <a class="text-decoration-none" href="<?= Url::toRoute(['/documents'])?>">Замовченням(id)</a>
-            <p class="text-muted text-decoration-underline">Типом судочинства</p>
-        <?php else:?>
-            <p class="text-muted text-decoration-underline">Замовченням(id)</p>
-            <a class="text-decoration-none" href="<?= Url::toRoute(['/documents', 'sort' => 'judgment'])?>">Типом судочинства</a>
-        <?php endif; ?>
+    <div class="filters row row-cols-auto gap-0 gap-md-2">
+        <p class="m-0">Cортувати за:</p>
+        <div class="d-flex gap-2 pb-2">
+            <?php if (Yii::$app->getRequest()->getQueryParam('sort') === 'judgment'):?>
+                <a class="m-0 text-decoration-none" href="<?= Url::toRoute(['/documents'])?>">Замовченням(id)</a>
+                <p class="m-0 text-muted text-decoration-underline">Типом судочинства</p>
+            <?php else:?>
+                <p class="m-0 text-muted text-decoration-underline">Замовченням(id)</p>
+                <a class="m-0 text-decoration-none" href="<?= Url::toRoute(['/documents', 'sort' => 'judgment'])?>">Типом судочинства</a>
+            <?php endif; ?>
+        </div>
     </div>
 
         <div>
@@ -100,6 +104,7 @@ $paginationBlock = LinkPager::widget([
 <script>
     const searchBar = document.getElementById('search')
     const searchListElement = document.getElementById('search-list');
+    const searchErrorElement = document.querySelector('.search-error');
 
     document.addEventListener('click', function(e) {
         if (!e.target.classList.contains('search-list') && !e.target.classList.contains('search-bar'))
@@ -109,7 +114,6 @@ $paginationBlock = LinkPager::widget([
     searchBar.addEventListener('keyup', async function(e) {
         if(e.target.value.length > 1) {
             const list = await getData(e.target);
-            updateList(list, e.target.value);
             return;
         }
 
@@ -124,6 +128,7 @@ $paginationBlock = LinkPager::widget([
 
     async function getData(form) {
         const string = form.value;
+  
 
         const dataString ={
             'strings' : string,
@@ -135,11 +140,20 @@ $paginationBlock = LinkPager::widget([
             method: 'GET',
         });
 
-        const res = await req.json();
+        if (req.status !== 500) {
+            const res = await req.json();
 
-        const rawList = res.docList;
+            const rawList = res.docList;
 
-        return rawList;
+            updateList(rawList, string);
+
+            searchErrorElement.classList.add('d-none')
+
+            return;
+        }
+
+        searchErrorElement.classList.remove('d-none');
+        searchListElement.classList.add('d-none');
     }
 
     function updateList(rawList = null, searchedPhrase) {
@@ -181,6 +195,8 @@ $paginationBlock = LinkPager::widget([
         } else {
             searchListElement.innerHTML = ` <p class="m-0 p-2">No results</p>`;
         }
+
+        
     }
         
 </script>

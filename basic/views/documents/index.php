@@ -30,6 +30,16 @@ $paginationBlock = LinkPager::widget([
             
         </div>
     </div>
+    <div class="filters d-flex gap-2">
+        <p>Cортувати за:</p>
+        <?php if (Yii::$app->getRequest()->getQueryParam('sort') === 'judgment'):?>
+            <a class="text-decoration-none" href="<?= Url::toRoute(['/documents'])?>">Замовченням(id)</a>
+            <p class="text-muted text-decoration-underline">Типом судочинства</p>
+        <?php else:?>
+            <p class="text-muted text-decoration-underline">Замовченням(id)</p>
+            <a class="text-decoration-none" href="<?= Url::toRoute(['/documents', 'sort' => 'judgment'])?>">Типом судочинства</a>
+        <?php endif; ?>
+    </div>
 
         <div>
             <div class="table-header bg-secondary text-white">

@@ -14,15 +14,23 @@ class DocumentsController extends Controller
      * show page with documents
      */
 
-    public function actionIndex()
+    public function actionIndex(Request $request)
     {
         $query = Document::find();
         $pages = new Pagination(['totalCount' => $query->count(), 'defaultPageSize' => 25]);
-        $documents = $query->offset($pages->offset)
+        echo $request->get('sort');
+        if ($request->get('sort') === 'judgment') {
+            $documents = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->where('num_litigation')
+            ->orderBy(['justice_id' => SORT_DESC])
+            ->all();
+        } else {
+            $documents = $query->offset($pages->offset)
             ->limit($pages->limit)
             ->where('num_litigation')
             ->all();
-            
+        }
 
         return $this->render('index', [
             'documents' => $documents,
